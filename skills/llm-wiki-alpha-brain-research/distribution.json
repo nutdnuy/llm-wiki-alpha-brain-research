@@ -1,0 +1,16 @@
+{
+  "SKILL.md": "e11d7fd507f677496e6aea4c1dee2c06aa948022c90ab7e164bceb3aa0cf9c6f",
+  "assets/starter/03-Logs/Log.md": "07d4c4a6eecd84f72c43bfd129d6d3eadbc80208c4ed005b5e1241f4612b2dc4",
+  "assets/starter/04-Schema/Contract.md": "6bf35cd1349996a8d831b6f811722fd4a5203ed3badaf2aac6bfff584799b40a",
+  "assets/starter/05-Index/Home.md": "83ef774b4cfb88ba5fd2ed43eb244964a7d66063a6af478c0011bbb16f4e9336",
+  "assets/starter/05-Index/Research.md": "aa093921b1334d147d5ff4fdb5d2b00755bfc19849cab022c1e03a877e3e9805",
+  "assets/starter/AGENTS.md": "42d03ced446fb6c208a708a0f3b6b64c20608fc6a8ee070e8a95e7d1fb0727be",
+  "references/brain-handoff.md": "5b564cbbd65fd98e8c81ab2bfd691c54149cec71bf1b44ef30284e5a1a663b8f",
+  "references/data-contract.md": "2e9bf6ff096400e42e8d7b95853235e1d70d43b5a5030c41b1f3187c3632344c",
+  "references/workflows.md": "55933670f2316a4a4dc72e8f60158ba8138398798e2dc04c17fb2106470c803a",
+  "scripts/brain_wiki.py": "14c1a636e23544f40c03775f9947b99f20855f065d5da8d7299687fbd1eb01c5",
+  "scripts/handoff.py": "54882f00cf91cc74adf8b6406b89f420215d34372dddaf1dd679b7cb1ecff8ce",
+  "scripts/model.py": "89723c94c061acee6b861ff55daba14878abd9f1371609e9f87704d5955570f0",
+  "scripts/storage.py": "88d3b85e91ee253bf51cba5e98cf643a09616d04bd6420770cb100ac31141f6c",
+  "scripts/validate.py": "9e585e6097331d44fc0b496505914b09042b94fd74ed45b4412004c8ca3b2cf3"
+}
