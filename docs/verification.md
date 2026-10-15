@@ -1,6 +1,6 @@
 # MVP verification and release handoff
 
-Recorded 2026-10-15. This is a local acceptance record. Task 9 spec and quality reviews approved the initial acceptance record before the final guard fix. Final code quality/re-review and main-branch integration remain pending. No remote repository was created and no push or remote CI execution occurred.
+Recorded 2026-10-15. This is a local acceptance record. All nine tasks received spec and quality approval. The final guard fix also passed both reviews, and the independent final reviewer approved commit `47d5fda`. The implementation was fast-forwarded into local `main`; the 45-test suite, 14-resource export check and example lint passed again in that checkout. No remote repository was created and no push or remote CI execution occurred.
 
 ## Evidence actually observed
 
@@ -9,7 +9,7 @@ Recorded 2026-10-15. This is a local acceptance record. Task 9 spec and quality 
 | Portable offline suite | 45 tests passed with Python 3.14.8 and PyYAML 6.0.3. |
 | Skill export | `export_skill.py --check` returned 14; allowlisted resources and recorded hashes match the canonical source. |
 | Synthetic example | A fresh physical temporary build using `tests/build_example.py` reproduced all 12 checked-in example files byte-for-byte; lint returned zero structural errors. |
-| Scoped implementation reviews | Tasks 1–8 received scoped approval before this acceptance record. Final review remains separate. |
+| Scoped implementation reviews | Tasks 1–9 received scoped approval. The final independent review approved the integrated implementation after the symlink regression fix. |
 | Directed manual behavior | Ten fresh Codex subagents manually loaded the installed skill; all ten cases assessed PASS after parent artifact inspection. See [observed evidence](behavioral-evidence.md). |
 | Registration | Local registration commit `30a08f28046bbec914886b68bd6d051493b92df2`; both configured runtime symlinks resolve to the canonical skill. |
 | Catalog audit | Before/after: 43 errors, 17 warnings, 6 informational findings. Stable finding fields were identical, excluding line movement; no finding refers to this skill. Existing unrelated catalog errors remain. |
@@ -50,7 +50,7 @@ Claude installation links resolve, but Claude behavior has not been tested. Auto
 
 ## Concrete publication handoff
 
-Proposed repository name: `llm-wiki-alpha-brain-research`; proposed visibility: public. Independently authored materials use the MIT license in `LICENSE`. The repository owner remains unselected. The tracked local package includes a focused acceptance-documentation commit; final approval and integration are pending. This statement concerns the release tracked set, not the cleanliness of another checkout. No remote exists for this release, and no publication action has been taken.
+Proposed repository name: `llm-wiki-alpha-brain-research`; proposed visibility: public. Independently authored materials use the MIT license in `LICENSE`. The repository owner remains unselected. The tracked local package includes the approved implementation and acceptance documentation, integrated into local `main`. This statement concerns the release tracked set, not the cleanliness of another checkout. No remote exists for this release, and no publication action has been taken.
 
 Review these release contents:
 
@@ -61,4 +61,4 @@ Review these release contents:
 - `scripts/export_skill.py` and `.github/workflows/test.yml`.
 - `docs/provenance.md`, `docs/verification.md`, and `docs/behavioral-evidence.md`.
 
-Actual project research, account exports, credentials, canonical configuration and local raw behavioral reports are excluded. Before a future authorized publication, inspect the committed file list and staged diff, obtain final review, choose the owner/destination, and create a remote only within that authorization. This record does not claim those later steps have occurred.
+Actual project research, account exports, credentials, canonical configuration and local raw behavioral reports are excluded. Before a future authorized publication, inspect the committed file list and staged diff, choose the owner/destination, and create a remote only within that authorization. This record does not claim those later steps have occurred.
