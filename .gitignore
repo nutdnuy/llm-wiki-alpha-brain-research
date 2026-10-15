@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+.env
+.env.*
+research/
+wiki/
+outputs/
+.obsidian/
+docs/superpowers/plans/
