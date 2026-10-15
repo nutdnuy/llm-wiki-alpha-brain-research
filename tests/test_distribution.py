@@ -52,7 +52,12 @@ class DistributionTests(unittest.TestCase):
             # Last allowlisted file fails: earlier files must not be written.
             last = source / exporter.FILES[-1]
             original = last.read_bytes()
-            for marker in ('/Users/private', '/home/private', 'BEGIN PRIVATE KEY'):
+            for marker in ('/Users/private', '/home/private', 'BEGIN PRIVATE KEY',
+                           '-----BEGIN OPENSSH PRIVATE KEY-----',
+                           '-----BEGIN RSA PRIVATE KEY-----',
+                           '-----BEGIN EC PRIVATE KEY-----',
+                           '-----BEGIN DSA PRIVATE KEY-----',
+                           '-----BEGIN ENCRYPTED PRIVATE KEY-----'):
                 last.write_text(marker)
                 with self.assertRaisesRegex(ValueError, 'nonportable/private'):
                     exporter.export(source, out)

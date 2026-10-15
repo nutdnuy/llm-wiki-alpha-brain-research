@@ -24,7 +24,8 @@ def export(source, destination, check=False):
         path.resolve().relative_to(source.resolve())
         raw = path.read_bytes()
         text = raw.decode('utf-8')
-        if any(marker in text for marker in ('/Users/', '/home/', 'BEGIN PRIVATE KEY')):
+        if (any(marker in text for marker in ('/Users/', '/home/'))
+                or re.search(r'BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY', text)):
             raise ValueError('nonportable/private material in ' + name)
         payload[name] = raw
     manifest = {name: hashlib.sha256(raw).hexdigest() for name, raw in payload.items()}
