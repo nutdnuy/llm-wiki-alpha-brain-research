@@ -44,7 +44,7 @@ Claude installation links resolve, but Claude behavior has not been tested. Auto
 
 ## Concrete publication handoff
 
-Proposed repository name: `llm-wiki-alpha-brain-research`. The tracked local package includes a focused acceptance-documentation commit; final approval and integration are pending. This statement concerns the release tracked set, not the cleanliness of another checkout. No remote exists for this release, and no publication action has been taken.
+Proposed repository name: `llm-wiki-alpha-brain-research`; proposed visibility: public. Independently authored materials use the MIT license in `LICENSE`. The repository owner remains unselected. The tracked local package includes a focused acceptance-documentation commit; final approval and integration are pending. This statement concerns the release tracked set, not the cleanliness of another checkout. No remote exists for this release, and no publication action has been taken.
 
 Review these release contents:
 
