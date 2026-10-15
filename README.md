@@ -57,8 +57,10 @@ handoff. Never infer current field access or program eligibility from examples.
 ## Development
 
 This local MVP assumes a single writer; concurrent writes are unsupported.
-Host behavior remains pending and unverified until the manual behavioral
-cases are executed.
+Ten directed cases passed with fresh Codex subagents manually loading the
+installed skill. Automatic discovery and Claude behavior remain unverified.
+See [verification](docs/verification.md) and [observed behavioral evidence](docs/behavioral-evidence.md)
+for the tested scope and remaining limits.
 
 Run the offline suite above. Run manual cases in tests/behavioral-cases.md
 before advertising host support. The maintainer exports skill assets from
