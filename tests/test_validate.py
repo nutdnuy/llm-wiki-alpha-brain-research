@@ -172,3 +172,36 @@ class ValidationTests(unittest.TestCase):
                         write(temp, records[1])
                         expected = 'citation needs locator'
                     self.assertIn(expected, '\n'.join(lint(temp)))
+
+    def test_real_candidate_rejects_mixed_source_hypothesis(self):
+        import copy
+        for repaired_parent in (False, True):
+            with self.subTest(repaired_parent=repaired_parent), tempfile.TemporaryDirectory() as temp:
+                records = fixture(temp)
+                real_source = copy.deepcopy(records[0])
+                real_source.update(id='src-real', synthetic=False)
+                records[1]['synthetic'] = False
+                records[1]['sources'].append({'source': 'src-real', 'claim': 'claim-01', 'locator': 'line 1'})
+                records[2].update(source='src-real', synthetic=False)
+                records[3]['synthetic'] = False
+                if repaired_parent:
+                    clean_hypothesis = copy.deepcopy(records[1])
+                    clean_hypothesis.update(id='hyp-clean', sources=[{'source': 'src-real', 'claim': 'claim-01', 'locator': 'line 1'}])
+                    child = copy.deepcopy(records[2])
+                    child.update(id='cand-child', hypothesis='hyp-clean', parent_candidate='cand-demo', repair_experiment='exp-demo')
+                    write(temp, clean_hypothesis)
+                    write(temp, child)
+                for record in records + [real_source]:
+                    write(temp, record)
+                errors = '\n'.join(lint(temp))
+                candidate_id = 'cand-child' if repaired_parent else 'cand-demo'
+                self.assertIn(candidate_id + ': synthetic lineage cannot become a real candidate', errors)
+                # Synthetic candidates may retain and discuss mixed provenance.
+                records[2]['synthetic'] = True
+                records[3]['synthetic'] = True
+                if repaired_parent:
+                    child['synthetic'] = True
+                    write(temp, child)
+                for record in records:
+                    write(temp, record)
+                self.assertEqual(lint(temp), [])
