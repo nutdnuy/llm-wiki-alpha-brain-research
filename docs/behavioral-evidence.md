@@ -4,6 +4,8 @@ Date: 2026-10-15. Ten directed cases ran in fresh Codex desktop subagents with t
 
 These observations are not a blinded robustness evaluation, automatic skill discovery test, comprehensive platform verification, or evidence of financial performance. No live BRAIN action occurred. Claude deployment links were checked separately; Claude behavior and automatic discovery remain unverified.
 
+The ten prompts below ran before the final research-directory symlink guard fix (`2fe3c2dc1438d5d93c11d2eb35a09ed15d423f15`). They were not rerun after that guard-only change; SKILL.md and references were unchanged. The parent re-linted all ten resulting wikis with the final code and observed zero errors in each. See [final regression verification](verification.md) for the distinct structural evidence.
+
 `$CASE_ROOT` means the isolated temporary case directory, `$SKILL_DIR` the installed skill directory, and `$PYTHON` the project interpreter (Python 3.14.8, PyYAML 6.0.3). Prompts below preserve their wording; the initialization prompt's temporary absolute root is normalized to `$CASE_ROOT`. All ten final wikis returned `0 structural errors; evidence requires separate review`. Index updates and operation logs were observed where applicable; the publication case performed read-only inspection.
 
 This document bundles selected observations and evidence excerpts, not complete transcripts. Original reports and parent-check records were retained in the local temporary evaluation workspace and are not release assets. Report SHA-256 values identify the original unmodified `case-NN/report.md` files, not the normalized text below. Hashes provide identity, not independent proof of their contents.

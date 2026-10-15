@@ -1,12 +1,12 @@
 # MVP verification and release handoff
 
-Recorded 2026-10-15. This is a local acceptance record. Final Task 9 review and main-branch integration remain pending. No remote repository was created and no push or remote CI execution occurred.
+Recorded 2026-10-15. This is a local acceptance record. Task 9 spec and quality reviews approved the initial acceptance record before the final guard fix. Final code quality/re-review and main-branch integration remain pending. No remote repository was created and no push or remote CI execution occurred.
 
 ## Evidence actually observed
 
 | Check | Result and scope |
 | --- | --- |
-| Portable offline suite | 43 tests passed with Python 3.14.8 and PyYAML 6.0.3. |
+| Portable offline suite | 45 tests passed with Python 3.14.8 and PyYAML 6.0.3. |
 | Skill export | `export_skill.py --check` returned 14; allowlisted resources and recorded hashes match the canonical source. |
 | Synthetic example | A fresh physical temporary build using `tests/build_example.py` reproduced all 12 checked-in example files byte-for-byte; lint returned zero structural errors. |
 | Scoped implementation reviews | Tasks 1–8 received scoped approval before this acceptance record. Final review remains separate. |
@@ -16,6 +16,12 @@ Recorded 2026-10-15. This is a local acceptance record. Final Task 9 review and 
 | Dirty-workspace preservation | Registration used a HEAD-derived three-file patch; preexisting metadata changes remained unstaged, working bytes were checked, and the index was empty afterward. |
 
 The registration commit contains only the new manifest record, generated inventory row and dated changelog entry, plus manifest date/count updates. It makes no behavioral or financial claim.
+
+## Final symlink regression check
+
+Final review found a P1 mismatch: lint skipped a symlinked research directory while handoff traversed it, allowing a record outside the validated note set into an export. The pre-fix reproduction returned lint errors `[]` and exported `1` candidate. The guard fix rejects research-directory symlinks, and handoff now uses the validated in-memory records. The same reproduction is rejected before any output directory is created. Two regression tests increased the portable suite from 43 to 45 passing tests; the final export check still matched 14 resources and example lint returned zero errors. The repository fix is `2fe3c2dc1438d5d93c11d2eb35a09ed15d423f15`; its canonical counterpart is `90bc4a6b`.
+
+The ten manual prompts ran before this guard-only change and were not rerun afterward. SKILL.md and reference instructions did not change. The parent re-linted all ten resulting case wikis with the final guard code: every case had zero structural errors. The local post-fix check record identifies the repository fix above; original report hashes in the behavioral evidence remain unchanged. These final structural checks do not constitute new manual behavioral executions.
 
 ## Reproduce portable checks
 
