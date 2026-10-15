@@ -157,3 +157,18 @@ class ValidationTests(unittest.TestCase):
                 records[0]['raw_path'] = raw_path
                 write(temp, records[0])
                 self.assertTrue(lint(temp))
+
+    def test_claim_and_citation_locators_require_nonblank_strings(self):
+        for boundary in ('claim', 'citation'):
+            for locator in ('   ', ['invalid locator container']):
+                with self.subTest(boundary=boundary, locator=locator), tempfile.TemporaryDirectory() as temp:
+                    records = fixture(temp)
+                    if boundary == 'claim':
+                        records[0]['claims'][0]['locator'] = locator
+                        write(temp, records[0])
+                        expected = 'claim needs text and locator'
+                    else:
+                        records[1]['sources'][0]['locator'] = locator
+                        write(temp, records[1])
+                        expected = 'citation needs locator'
+                    self.assertIn(expected, '\n'.join(lint(temp)))
