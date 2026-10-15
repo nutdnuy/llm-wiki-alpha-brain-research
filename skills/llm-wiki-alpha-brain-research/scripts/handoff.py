@@ -1,8 +1,7 @@
 import csv
 import json
 from pathlib import Path
-from model import read_note
-from validate import lint
+from validate import validated_records
 
 CANDIDATE_FIELDS = ['candidate_id', 'hypothesis_id', 'source_id', 'family',
                     'expression', 'settings_json', 'expected_effect',
@@ -12,16 +11,15 @@ QUEUE_FIELDS = ['queue_id', 'candidate_id', 'expression', 'settings_json',
 
 def export_handoff(root, output) -> int:
     root, output = Path(root).resolve(), Path(output).absolute()
-    errors = lint(root)
-    if errors:
-        raise ValueError('\n'.join(errors))
+    records = validated_records(root)
     if output.exists() or output.is_symlink():
         raise ValueError('handoff destination already exists')
     if any(parent.is_symlink() for parent in output.parents):
         raise ValueError('handoff destination has a symlink parent')
     rows, queue = [], []
-    for path in sorted((root / '02-Wiki' / 'Candidates').glob('*.md')):
-        note, _ = read_note(path)
+    for note in records:
+        if note['type'] != 'candidate':
+            continue
         if note['synthetic'] or note['research_state'] not in {'static-pass', 'queued'}:
             continue
         settings = json.dumps(note['settings'], sort_keys=True, ensure_ascii=False)

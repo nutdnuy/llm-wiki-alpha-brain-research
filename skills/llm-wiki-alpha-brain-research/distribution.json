@@ -9,8 +9,8 @@
   "references/data-contract.md": "2e9bf6ff096400e42e8d7b95853235e1d70d43b5a5030c41b1f3187c3632344c",
   "references/workflows.md": "55933670f2316a4a4dc72e8f60158ba8138398798e2dc04c17fb2106470c803a",
   "scripts/brain_wiki.py": "14c1a636e23544f40c03775f9947b99f20855f065d5da8d7299687fbd1eb01c5",
-  "scripts/handoff.py": "54882f00cf91cc74adf8b6406b89f420215d34372dddaf1dd679b7cb1ecff8ce",
+  "scripts/handoff.py": "c6a2fdd39495f3b761a6d39c02798efdf41e35264f7d3f26b2e673bfaae8ad7a",
   "scripts/model.py": "89723c94c061acee6b861ff55daba14878abd9f1371609e9f87704d5955570f0",
   "scripts/storage.py": "88d3b85e91ee253bf51cba5e98cf643a09616d04bd6420770cb100ac31141f6c",
-  "scripts/validate.py": "9e585e6097331d44fc0b496505914b09042b94fd74ed45b4412004c8ca3b2cf3"
+  "scripts/validate.py": "4e8b85f0cab0f4e47fee592f964ed0a8b09730bd092fd27f6878e0e52dd04530"
 }

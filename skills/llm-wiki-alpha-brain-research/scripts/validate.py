@@ -1,22 +1,39 @@
 import json
+import os
 from pathlib import Path
 import yaml
 from model import FOLDERS, SETTINGS, STATES, digest, read_note, within
 
-def lint(root):
+def _validate(root):
     root = Path(root).resolve()
     errors, notes = [], {}
     if not (root / '.brain-wiki.json').is_file():
-        return ['missing .brain-wiki.json marker']
+        return ['missing .brain-wiki.json marker'], notes
     try:
         marker = json.loads((root / '.brain-wiki.json').read_text(encoding='utf-8'))
         if not isinstance(marker, dict) or type(marker.get('schema_version')) is not int or marker['schema_version'] != 1:
-            return ['unsupported .brain-wiki.json schema_version; expected 1']
+            return ['unsupported .brain-wiki.json schema_version; expected 1'], notes
     except (OSError, ValueError) as exc:
-        return ['invalid .brain-wiki.json marker: ' + str(exc)]
-    if not (root / '02-Wiki').is_dir():
-        return ['missing 02-Wiki research root']
-    for path in sorted((root / '02-Wiki').rglob('*.md')):
+        return ['invalid .brain-wiki.json marker: ' + str(exc)], notes
+    # Preflight every research entry before reading records. rglob/glob disagree
+    # on directory symlinks; even empty or dangling links must fail closed.
+    paths = []
+    try:
+        research = within(root, '02-Wiki')
+        if not research.is_dir():
+            return ['missing 02-Wiki research root'], notes
+
+        def walk_error(exc):
+            raise exc
+
+        for directory, folders, files in os.walk(research, followlinks=False, onerror=walk_error):
+            for name in sorted(folders + files):
+                path = within(root, (Path(directory) / name).relative_to(root))
+                if path.is_file() and path.suffix == '.md':
+                    paths.append(path)
+    except (ValueError, OSError) as exc:
+        return ['research tree: ' + str(exc)], notes
+    for path in sorted(paths):
         try:
             within(root, path.relative_to(root))
             note, body = read_note(path)
@@ -189,4 +206,16 @@ def lint(root):
                     ref(item, 'experiment')
         except (KeyError, ValueError, TypeError, AttributeError, OSError) as exc:
             errors.append(identity + ': ' + str(exc))
-    return sorted(errors)
+    return sorted(errors), notes
+
+
+def lint(root):
+    return _validate(root)[0]
+
+
+def validated_records(root):
+    """Return only containment-checked records from a successful validation."""
+    errors, notes = _validate(root)
+    if errors:
+        raise ValueError('\n'.join(errors))
+    return [note for note, _ in notes.values()]

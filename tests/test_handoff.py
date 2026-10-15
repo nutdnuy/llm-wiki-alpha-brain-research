@@ -96,3 +96,33 @@ class HandoffTests(unittest.TestCase):
                     export_handoff(wiki, output)
             self.assertEqual((base / 'file').read_text(), 'keep')
             self.assertEqual(list((base / 'directory').iterdir()), [])
+
+    def test_symlinked_candidates_cannot_bypass_lineage_validation(self):
+        from storage import initialize
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            wiki, external = base / 'wiki', base / 'external'
+            initialize(wiki)
+            records = fixture(base / 'fixture')
+            candidate = records[2]
+            candidate.update(synthetic=False, research_state='static-pass',
+                             source='src-nonexistent', hypothesis='hyp-nonexistent')
+            external_note = write(external, candidate)
+            candidates = wiki / '02-Wiki/Candidates'
+            candidates.rmdir()
+            candidates.symlink_to(external_note.parent, target_is_directory=True)
+            before = {p.relative_to(external): p.read_bytes()
+                      for p in external.rglob('*') if p.is_file()}
+            errors = lint(wiki)
+            output = base / 'queue'
+            rejected = False
+            try:
+                exported = export_handoff(wiki, output)
+            except ValueError:
+                rejected = True
+                exported = 0
+            self.assertTrue(errors and rejected,
+                            f'lint={errors!r}; exported={exported}; rejected={rejected}')
+            self.assertFalse(output.exists())
+            self.assertEqual(before, {p.relative_to(external): p.read_bytes()
+                                     for p in external.rglob('*') if p.is_file()})

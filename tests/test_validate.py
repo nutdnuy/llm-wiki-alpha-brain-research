@@ -205,3 +205,22 @@ class ValidationTests(unittest.TestCase):
                 for record in records:
                     write(temp, record)
                 self.assertEqual(lint(temp), [])
+
+    def test_research_directory_symlinks_are_rejected_before_enumeration(self):
+        from storage import initialize
+        from model import FOLDERS
+        for location in ('02-Wiki', *(f'02-Wiki/{name}' for name in FOLDERS.values()),
+                         '02-Wiki/Sources/nested'):
+            for target_kind in ('empty', 'dangling'):
+                with self.subTest(location=location, target_kind=target_kind), tempfile.TemporaryDirectory() as temp:
+                    base = Path(temp).resolve()
+                    wiki, target = base / 'wiki', base / 'target'
+                    initialize(wiki)
+                    path = wiki / location
+                    if path.exists():
+                        import shutil
+                        shutil.rmtree(path)
+                    if target_kind == 'empty':
+                        target.mkdir()
+                    path.symlink_to(target, target_is_directory=True)
+                    self.assertIn('symlink', '\n'.join(lint(wiki)))
