@@ -1,5 +1,11 @@
 # MVP verification and release handoff
 
+## Publication update
+
+Published to [nutdnuy/llm-wiki-alpha-brain-research](https://github.com/nutdnuy/llm-wiki-alpha-brain-research) as a public repository on 2026-10-15. The reviewed project history was pushed to `main`; unrelated untracked research files were excluded. This update supersedes the pre-publication remote/owner status in the historical local acceptance record below. The [initial hosted CI run](https://github.com/nutdnuy/llm-wiki-alpha-brain-research/actions/runs/38695501823) passed both Python 3.11 and 3.13 jobs. The earlier statements about unexecuted hosted CI below describe the local acceptance checkpoint.
+
+## Historical local acceptance record
+
 Recorded 2026-10-15. This is a local acceptance record. All nine tasks received spec and quality approval. The final guard fix also passed both reviews, and the independent final reviewer approved commit `47d5fda`. The implementation was fast-forwarded into local `main`; the 45-test suite, 14-resource export check and example lint passed again in that checkout. No remote repository was created and no push or remote CI execution occurred.
 
 ## Evidence actually observed
