@@ -4,6 +4,11 @@ Architectural inspiration: https://github.com/Migchw/llm-wiki-starter
 Reviewed reference commit: c6464503913b80771f6dddcaaacfacbf906de8a7.
 Review date: 2026-10-15.
 
+The same reference revision was inspected again on 2026-10-28 for v0.2.0.
+Its evidence-first research and delta-review patterns informed the shared
+BRAIN/Python workflow. The backend contracts, seven templates and implementation
+are independently authored. See the [design mapping](../skills/llm-wiki-alpha-brain-research/references/upstream-design.md).
+
 The reference separates raw captures, source-grounded notes, derived research
 and quality checks. This project independently implements a quantitative
 research-memory contract. No upstream code, instruction text, assets or

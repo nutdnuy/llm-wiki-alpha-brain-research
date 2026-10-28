@@ -97,7 +97,11 @@ class DistributionTests(unittest.TestCase):
             exporter.export(SKILL, out)
             cache = out / 'scripts/__pycache__'
             cache.mkdir()
-            (cache / 'model.cpython-311.pyc').write_bytes(b'cache')
+            for name in ('model.cpython-311.pyc', 'backends.cpython-313.pyc'):
+                (cache / name).write_bytes(b'cache')
+            test_cache = out / 'tests/__pycache__'
+            test_cache.mkdir()
+            (test_cache / 'test_backends.cpython-313.pyc').write_bytes(b'cache')
             exporter.export(SKILL, out, check=True)
             for name in ('secret.txt', 'secret.pyc', 'unknown.cpython-311.pyc'):
                 (cache / name).write_text('not a generated cache')

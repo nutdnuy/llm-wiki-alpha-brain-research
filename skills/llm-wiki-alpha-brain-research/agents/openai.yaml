@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alpha Research Wiki"
+  short_description: "Shared evidence and experiments for BRAIN and Python/Qlib"
+  default_prompt: "Use $llm-wiki-alpha-brain-research to build source-grounded alpha hypotheses and track BRAIN and Python/Qlib experiments in one project wiki."

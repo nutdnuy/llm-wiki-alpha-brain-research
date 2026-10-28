@@ -1,4 +1,29 @@
-# MVP verification and release handoff
+# Verification and release history
+
+## Version 0.2.0 — shared BRAIN and Python/Qlib research
+
+Recorded 2026-10-28. Sources and hypotheses are shared across backends;
+candidate settings, tested snapshots and result evidence remain separate.
+Legacy records without a backend continue to mean BRAIN.
+
+| Check | Observed local result |
+| --- | --- |
+| Combined offline suite | 66 tests passed on Python 3.14.8 and PyYAML 6.0.3: the original 45 cases plus 21 backend contract cases. |
+| Canonical export | All 30 explicitly allowlisted resources match the source and recorded SHA-256 values. |
+| Shared synthetic example | Seven typed records across BRAIN and Python; lint reports zero structural errors. All are synthetic; neither experiment was executed. |
+| Note templates | Seven templates are included in new wikis; they require evidence-backed values before use. |
+| Skill and CLI checks | Frontmatter validation and a separate init/capture/lint/index/handoff smoke passed during skill creation. |
+| Scope | The BRAIN handoff excludes Python candidates; backend mismatches, unsupported pass decisions, changed tested snapshots and synthetic promotion are rejected in tests. |
+
+Hosted results are available in [GitHub Actions](https://github.com/nutdnuy/llm-wiki-alpha-brain-research/actions/workflows/test.yml).
+This version has no new independent model forward-test, live BRAIN simulation
+or market-data Qlib backtest. The earlier directed Codex observations below
+apply to the BRAIN-only version and must not be presented as v0.2.0 evidence.
+
+The historical script name, installed skill identifier and wiki marker are
+retained. Existing BRAIN notes need no migration. Older releases cannot
+write mixed-backend wikis. No current platform eligibility or profitability
+claim follows from the local checks.
 
 ## Publication update
 

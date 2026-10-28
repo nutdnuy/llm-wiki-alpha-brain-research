@@ -25,7 +25,7 @@ class ValidationTests(unittest.TestCase):
             records = fixture(temp)
             records[2]['research_state'] = 'hard-pass'
             write(temp, records[2])
-            self.assertIn('state requires real BRAIN evidence', '\n'.join(lint(temp)))
+            self.assertIn('state requires real matching-backend evidence', '\n'.join(lint(temp)))
 
     def test_snapshot_and_repair_lineage(self):
         with tempfile.TemporaryDirectory() as temp:

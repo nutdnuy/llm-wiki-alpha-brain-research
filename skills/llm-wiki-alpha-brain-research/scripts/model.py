@@ -25,7 +25,7 @@ REQUIRED = {
 }
 SETTINGS = {'region', 'universe', 'delay', 'neutralization', 'decay',
             'truncation', 'pasteurization', 'nan_handling'}
-STATES = {'draft', 'static-pass', 'queued', 'simulated', 'hard-pass',
+STATES = {'draft', 'static-pass', 'queued', 'simulated', 'backtested', 'hard-pass',
           'near-pass', 'failed', 'archive'}
 
 def digest(data):

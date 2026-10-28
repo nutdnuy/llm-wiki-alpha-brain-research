@@ -2,7 +2,8 @@ import json
 import os
 from pathlib import Path
 import yaml
-from model import FOLDERS, SETTINGS, STATES, digest, read_note, within
+from model import FOLDERS, STATES, digest, read_note, within
+from backends import backend, observed_kind, same_run, validate_settings
 
 def _validate(root):
     root = Path(root).resolve()
@@ -74,16 +75,6 @@ def _validate(root):
         need(path.is_file(), 'missing artifact: ' + item['path'])
         need(digest(path.read_bytes()) == item['sha256'], 'artifact hash mismatch')
 
-    def setting(value):
-        need(isinstance(value, dict), 'settings must be a mapping')
-        need(SETTINGS <= value.keys(), 'missing reproduction settings')
-        need(all(value[k] is not None for k in SETTINGS), 'null reproduction setting')
-        need(type(value['delay']) is int and value['delay'] >= 0, 'invalid delay')
-        json.dumps(value, allow_nan=False)
-
-    def same_run(a, b):
-        return a['expression'] == b['expression'] and a['settings'] == b['settings']
-
     for identity, (note, body) in notes.items():
         try:
             kind = note['type']
@@ -125,6 +116,7 @@ def _validate(root):
                          all(isinstance(item, str) and item.strip() for item in note[key]),
                          'hypothesis ' + key + ' must be a list of nonempty strings')
             if kind == 'candidate':
+                engine = backend(note)
                 hypothesis = ref(note['hypothesis'], 'hypothesis')
                 source = ref(note['source'], 'source')
                 need(note['synthetic'] or not (source['synthetic'] or hypothesis['synthetic']
@@ -133,12 +125,17 @@ def _validate(root):
                 need(note['source'] in {x['source'] for x in hypothesis['sources']},
                      'candidate source is outside its hypothesis')
                 need(note['expression'].strip(), 'empty expression')
-                setting(note['settings'])
+                validate_settings(note['settings'], engine)
                 need(note['research_state'] in STATES, 'invalid candidate research state')
+                need(not (engine == 'python' and note['research_state'] == 'simulated'),
+                     'Python candidates use backtested, not simulated')
+                need(not (engine == 'brain' and note['research_state'] == 'backtested'),
+                     'BRAIN candidates use simulated, not backtested')
                 need(bool(note['parent_candidate']) == bool(note['repair_experiment']),
                      'repair requires both parent and experiment')
                 if note['parent_candidate']:
                     parent = ref(note['parent_candidate'], 'candidate')
+                    need(backend(parent) == engine, 'repair cannot cross backends; share the hypothesis instead')
                     repair = ref(note['repair_experiment'], 'experiment')
                     need(repair['candidate'] == parent['id'], 'repair experiment is not for parent')
                 seen, current = {identity}, note
@@ -155,23 +152,26 @@ def _validate(root):
                          'synthetic lineage cannot become a real candidate')
                 evaluations = [x for x, _ in notes.values()
                                if x['type'] == 'experiment' and x['candidate'] == identity
-                               and same_run(x, note) and x['evidence_kind'] == 'live_brain'
+                               and same_run(x, note) and x['evidence_kind'] == observed_kind(engine)
                                and not x['synthetic'] and x['artifacts']]
-                if note['research_state'] in {'simulated', 'near-pass', 'hard-pass'}:
-                    need(evaluations and not note['synthetic'], 'state requires real BRAIN evidence')
+                if note['research_state'] in {'simulated', 'backtested', 'near-pass', 'hard-pass'}:
+                    need(evaluations and not note['synthetic'], 'state requires real matching-backend evidence')
                 if note['research_state'] == 'hard-pass':
                     need(any(x['decision'] == 'pass' for x in evaluations),
                          'hard-pass requires an evidenced pass decision')
                 if note['research_state'] == 'failed':
                     need(note['notes'].strip(), 'failed candidate requires reason')
             if kind == 'experiment':
+                engine = backend(note)
                 candidate = ref(note['candidate'], 'candidate')
                 need(note['synthetic'] or not candidate['synthetic'],
                      'synthetic candidate cannot produce a real experiment')
-                setting(note['settings'])
+                validate_settings(note['settings'], engine)
                 need(same_run(note, candidate), 'tested snapshot differs; create a new candidate')
-                need(note['evidence_kind'] in {'untested', 'offline_proxy', 'live_brain'},
-                     'invalid evidence kind')
+                need(note['evidence_kind'] in {'untested', 'offline_proxy', observed_kind(engine)},
+                     'evidence kind does not match backend')
+                if engine == 'python':
+                    need(note['brain_alpha_id'] is None, 'Python experiment cannot have a BRAIN alpha ID')
                 need(isinstance(note['metrics'], dict) and isinstance(note['checks'], dict),
                      'metrics/checks must be mappings')
                 need(isinstance(note['artifacts'], list), 'artifacts must be a list')
@@ -187,15 +187,15 @@ def _validate(root):
                     need(note['artifacts'] and note['observed_at'] and note['test_scope'],
                          'observed result needs artifacts, observation time and test scope')
                 if note['decision'] == 'pass':
-                    need(note['evidence_kind'] == 'live_brain' and not note['synthetic'],
-                         'pass requires non-synthetic live evidence')
+                    need(note['evidence_kind'] == observed_kind(engine) and not note['synthetic'],
+                         'pass requires non-synthetic matching-backend evidence')
                     need(note['checks'].get('required_checks_complete') is True,
                          'pass requires a complete recorded check set')
                     need(isinstance(note['checks'].get('items'), dict) and note['checks']['items'] and
                          all(x == 'PASS' for x in note['checks']['items'].values()),
                          'pass requires all recorded checks to pass')
                     need(note['checks'].get('policy_source') and note['checks'].get('as_of'),
-                         'pass requires dated platform policy source')
+                         'pass requires dated backend evaluation policy source')
                 if note['decision'] != 'pending':
                     need(note['reason'] and note['next_action'], 'decision needs reason and next action')
             if kind == 'synthesis':

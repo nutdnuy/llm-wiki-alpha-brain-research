@@ -2,6 +2,7 @@ import csv
 import json
 from pathlib import Path
 from validate import validated_records
+from backends import backend
 
 CANDIDATE_FIELDS = ['candidate_id', 'hypothesis_id', 'source_id', 'family',
                     'expression', 'settings_json', 'expected_effect',
@@ -18,7 +19,7 @@ def export_handoff(root, output) -> int:
         raise ValueError('handoff destination has a symlink parent')
     rows, queue = [], []
     for note in records:
-        if note['type'] != 'candidate':
+        if note['type'] != 'candidate' or backend(note) != 'brain':
             continue
         if note['synthetic'] or note['research_state'] not in {'static-pass', 'queued'}:
             continue

@@ -18,13 +18,16 @@ queue_id,candidate_id,expression,settings_json,priority,reason,run_policy,status
 
 Settings are JSON; use a CSV parser because expressions and JSON contain
 commas. The exporter includes only non-synthetic static-pass/queued
-candidates and preserves expression/settings. Every queue row is manual-only.
+candidates with backend brain (including legacy records with no backend) and
+preserves expression/settings. Python/Qlib candidates are excluded. Every
+queue row is manual-only.
 Lint must pass before export. The destination must be a new directory; existing
 files, directories, symlinks and destinations through symlink parents are refused.
 No source, candidate or experiment changes merely because a file was exported.
 
-Candidate states are draft, static-pass, queued, simulated, hard-pass,
-near-pass, failed and archive. Experiment decisions are pending, pass,
+BRAIN candidate states are draft, static-pass, queued, simulated, hard-pass,
+near-pass, failed and archive. Python adds backtested instead of simulated,
+but never enters this exporter. Experiment decisions are pending, pass,
 near-pass, fail and archive. They are separate enums: a fail decision may
 motivate a failed candidate, but changes require an evidence-backed decision.
 

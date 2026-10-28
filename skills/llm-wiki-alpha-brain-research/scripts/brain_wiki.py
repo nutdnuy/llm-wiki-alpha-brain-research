@@ -21,7 +21,7 @@ def rebuild_index(root):
     path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description='Offline BRAIN research memory utilities')
+    parser = argparse.ArgumentParser(description='Shared BRAIN and Python/Qlib research memory utilities')
     commands = parser.add_subparsers(dest='command', required=True)
     init = commands.add_parser('init')
     init.add_argument('--wiki', required=True)

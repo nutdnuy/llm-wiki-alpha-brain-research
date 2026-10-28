@@ -4,7 +4,26 @@ import json
 import re
 from pathlib import Path
 
-FILES = ('scripts/model.py', 'scripts/validate.py', 'scripts/storage.py', 'scripts/handoff.py', 'scripts/brain_wiki.py', 'SKILL.md', 'references/workflows.md', 'references/brain-handoff.md', 'assets/starter/AGENTS.md', 'assets/starter/05-Index/Home.md', 'assets/starter/05-Index/Research.md', 'assets/starter/03-Logs/Log.md', 'assets/starter/04-Schema/Contract.md', 'references/data-contract.md')
+FILES = (
+    'SKILL.md', 'agents/openai.yaml', 'requirements.txt',
+    'scripts/model.py', 'scripts/validate.py', 'scripts/storage.py',
+    'scripts/handoff.py', 'scripts/brain_wiki.py', 'scripts/backends.py',
+    'references/workflows.md', 'references/brain-handoff.md',
+    'references/data-contract.md', 'references/backends.md',
+    'references/research-playbook.md', 'references/review-and-delta.md',
+    'references/upstream-design.md', 'references/usage.md',
+    'assets/starter/AGENTS.md', 'assets/starter/05-Index/Home.md',
+    'assets/starter/05-Index/Research.md', 'assets/starter/03-Logs/Log.md',
+    'assets/starter/04-Schema/Contract.md',
+    'assets/starter/04-Schema/Templates/Source.md',
+    'assets/starter/04-Schema/Templates/Hypothesis.md',
+    'assets/starter/04-Schema/Templates/Candidate-brain.md',
+    'assets/starter/04-Schema/Templates/Candidate-python.md',
+    'assets/starter/04-Schema/Templates/Experiment-brain.md',
+    'assets/starter/04-Schema/Templates/Experiment-python.md',
+    'assets/starter/04-Schema/Templates/Synthesis.md',
+    'tests/test_backends.py',
+)
 
 def reject_symlinks(path):
     # Include ancestors: a safe leaf must not traverse a redirected parent.
@@ -37,11 +56,10 @@ def export(source, destination, check=False):
             name = path.relative_to(destination).as_posix()
             if path.is_dir():
                 continue
-            cache = (path.parent.name == '__pycache__'
-                     and path.parent.parent.relative_to(destination).as_posix() == 'scripts'
-                     and re.fullmatch(
-                         r'(model|validate|storage|handoff|brain_wiki)\.cpython-[0-9]+(?:\.opt-[0-9]+)?\.pyc',
-                         path.name) is not None)
+            match = re.fullmatch(r'([a-z_]+)\.cpython-[0-9]+(?:\.opt-[0-9]+)?\.pyc', path.name)
+            cache = (path.parent.name == '__pycache__' and match is not None
+                     and (path.parent.parent / (match[1] + '.py'))
+                         .relative_to(destination).as_posix() in FILES)
             if name not in payload and not cache:
                 raise ValueError('unexpected distribution files: ' + name)
     for name in payload:
